@@ -8,12 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
-    //id	season	city	date	team1	team2	toss_winner	toss_decision	result	dl_applied	winner	win_by_runs	win_by_wickets	player_of_match	venue	umpire1	umpire2	umpire3
-
     public static final int MATCH_ID = 0;
-    public static final int MATCH_TEAM1 = 1;
-    public static final int MATCH_TEAM2 = 2;
-    public static final int CITY = 3;
+    public static final int MATCH_SEASON = 1;
+    public static final int MATCH_CITY = 2;
+    public static final int MATCH_DATE = 3;
+    public static final int MATCH_TEAM1 = 4;
+    public static final int MATCH_TEAM2 = 5;
     public static void main(String[] args) {
         List<Match> matches = getMatchesData();  // capitalization, verb
         List<Delivery> deliveries = getDeliveriesData();
