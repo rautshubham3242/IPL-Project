@@ -47,14 +47,17 @@ public class Main {
         List<Match> matches = new ArrayList<>();
         while (true) {
             try {
-                if (!(reader.readLine() != null)) {
+                if ((reader.readLine() != null)) {
                     line = reader.readLine(); //"12,CSK, MI, hyderabad"
                     String[] data = line.split(","); //["12", "CSK", "MI", "hyderabad"]
                     Match match = new Match();
                     match.setId(data[MATCH_ID]);
+                    match.setSeason(data[MATCH_SEASON]);
+                    match.setCity(data[MATCH_CITY]);
+                    match.setDate(data[MATCH_DATE]);
                     match.setTeam1(data[MATCH_TEAM1]);
                     match.setTeam2(data[MATCH_TEAM2]);
-                    match.setCity(data[CITY]);
+
                     matches.add(match);
                 }
                 else{
