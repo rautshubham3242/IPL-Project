@@ -29,16 +29,19 @@ public class Main {
 
 
     public static void main(String[] args) {
-        List<Match> matches = getMatchesData();  // capitalization, verb
+        try {
+            List<Match> matches = getMatchesData();
+            System.out.println(matches);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         List<Delivery> deliveries = getDeliveriesData();
 
-        // use data and solve problems
-        /*
-        findNumberOfMatchesPlayedPerYear(matches);
-        findNumberOfMatchesWonOfAllTeam(matches);
-        findExtraRunsConcededPerTeam(matches);
-        findTheMostEconomicalBowlerIn2015(matches, deliveries);
-         */
+        // findNumberOfMatchesPlayedPerYear(matches);
+        // findNumberOfMatchesWonOfAllTeam(matches);
+        // findExtraRunsConcededPerTeam(matches);
+        // findTheMostEconomicalBowlerIn2015(matches, deliveries);
+
     }
     private static void findNumberOfMatchesPlayedPerYear(List<Match> matches) {
     }
@@ -56,17 +59,15 @@ public class Main {
 
     private static List<Match> getMatchesData() throws FileNotFoundException {
         // use bufferedReader and some file reader
-        BufferedReader reader = new BufferedReader(new FileReader("matches.csv"));
+        BufferedReader reader = new BufferedReader(new FileReader("/home/oem/Desktop/IPL-Project/ipl-project/src/shubham/matches.csv"));
         String line = null;
         List<Match> matches = new ArrayList<>();
-        id,season,city,date,team1,team2,toss_winner,toss_decision,result,dl_applied,winner,win_by_runs,
-                win_by_wickets,player_of_match,venue,umpire1,umpire2,umpire3
 
         while (true) {
             try {
-                if ((reader.readLine() != null)) {
-                    line = reader.readLine(); //"12,CSK, MI, hyderabad"
-                    String[] data = line.split(","); //["12", "CSK", "MI", "hyderabad"]
+                if ((line=reader.readLine()) != null) {
+                    String[] data = line.split(",");
+
                     Match match = new Match();
                     match.setId(data[MATCH_ID]);
                     match.setSeason(data[MATCH_SEASON]);
@@ -82,9 +83,9 @@ public class Main {
                     match.setWinByWickets(data[MATCH_WIN_BY_WICKETS]);
                     match.setPlayerOFMatch(data[MATCH_PLAYER_OF_MATCH]);
                     match.setVenue(data[MATCH_VENUE]);
-                    match.setUmpire1(data[MATCH_UMPIRE_1]);
-                    match.setUmpire2(data[MATCH_UMPIRE_2]);
-                    match.setUmpire3(data[MATCH_UMPIRE_3]);
+                    //match.setUmpire1(data[MATCH_UMPIRE_1]);
+                    //match.setUmpire2(data[MATCH_UMPIRE_2]);
+                    //match.setUmpire3(data[MATCH_UMPIRE_3]);
 
                     matches.add(match);
                 }
