@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Main {
@@ -31,13 +32,7 @@ public class Main {
     public static void main(String[] args) {
         try {
             List<Match> matches = getMatchesData();
-//            System.out.println(matches.get(0).getId());
-//            System.out.println(matches.get(1).getId());
-//            System.out.println(matches.get(2).getId());
-//            System.out.println(matches.get(0).getSeason());
-//            System.out.println(matches.get(5).getSeason());
-
-            findNumberOfMatchesPlayedPerYear(matches);
+            System.out.println(findNumberOfMatchesPlayedPerYear(matches));
             //findNumberOfMatchesWonOfAllTeam(matches);
             //findExtraRunsConcededPerTeam(matches);
             //findTheMostEconomicalBowlerIn2015(matches, deliveries);
@@ -46,28 +41,38 @@ public class Main {
             throw new RuntimeException(e);
         }
         List<Delivery> deliveries = getDeliveriesData();
-
-
-
     }
-    private static void findNumberOfMatchesPlayedPerYear(List<Match> matches) {
-        int numberOfMatchesPlay = 1;
-        String season = matches.get(1).getSeason();
-
-        for(int i = 2; i < matches.size(); i++){
-            if (season.equals(matches.get(i).getSeason())){
-                numberOfMatchesPlay++;
+    private static Object findNumberOfMatchesPlayedPerYear(List<Match> matches) {
+        HashMap<String, String> map = new HashMap();
+        int count = 0;
+        for(int i = 1; i<matches.size(); i++){
+            if (map.containsKey(matches.get(i).getSeason())){
+                map.put(matches.get(i).getSeason(), String.valueOf(count++));
             }
-            else {
-                System.out.println("Number of Matches played in "+season+" "+ numberOfMatchesPlay);
-                season = matches.get(i).getSeason();
-                numberOfMatchesPlay = 1;
+            else{
+                count = 0;
+                map.put(matches.get(i).getSeason(), String.valueOf(count++));
             }
-
         }
+        return map;
+
+//        int numberOfMatchesPlay = 1;
+//        String season = matches.get(1).getSeason();
+//
+//        for(int i = 2; i < matches.size(); i++){
+//            if (season.equals(matches.get(i).getSeason())){
+//                numberOfMatchesPlay++;
+//            }
+//            else {
+//                System.out.println("Number of Matches played in "+season+" is "+ numberOfMatchesPlay);
+//                season = matches.get(i).getSeason();
+//                numberOfMatchesPlay = 1;
+//            }
+//        }
     }
 
     private static void findNumberOfMatchesWonOfAllTeam(List<Match> matches){
+
     }
     private static void findExtraRunsConcededPerTeam(List<Match> matches){
     }
