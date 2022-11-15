@@ -4,6 +4,7 @@
     <list default="true" id="8e8f7148-1d81-4d8b-a681-a3917cfc9a6d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/shubham/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/shubham/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/shubham/Match.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/shubham/Match.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -14,6 +14,20 @@ public class Main {
     public static final int MATCH_DATE = 3;
     public static final int MATCH_TEAM1 = 4;
     public static final int MATCH_TEAM2 = 5;
+    public static final int MATCH_TOSS_WINNER = 6;
+    public static final int MATCH_TOSS_DECISION = 7;
+    public static final int MATCH_RESULT = 8;
+    public static final int MATCH_DL_APPLIED = 9;
+    public static final int MATCH_WINNER = 10;
+    public static final int MATCH_WIN_BY_RUNS = 11;
+    public static final int MATCH_WIN_BY_WICKETS = 12;
+    public static final int MATCH_PLAYER_OF_MATCH = 13;
+    public static final int MATCH_VENUE = 14;
+    public static final int MATCH_UMPIRE_1 = 15;
+    public static final int MATCH_UMPIRE_2 = 16;
+    public static final int MATCH_UMPIRE_3 = 17;
+
+
     public static void main(String[] args) {
         List<Match> matches = getMatchesData();  // capitalization, verb
         List<Delivery> deliveries = getDeliveriesData();
@@ -45,6 +59,9 @@ public class Main {
         BufferedReader reader = new BufferedReader(new FileReader("matches.csv"));
         String line = null;
         List<Match> matches = new ArrayList<>();
+        id,season,city,date,team1,team2,toss_winner,toss_decision,result,dl_applied,winner,win_by_runs,
+                win_by_wickets,player_of_match,venue,umpire1,umpire2,umpire3
+
         while (true) {
             try {
                 if ((reader.readLine() != null)) {
@@ -57,6 +74,17 @@ public class Main {
                     match.setDate(data[MATCH_DATE]);
                     match.setTeam1(data[MATCH_TEAM1]);
                     match.setTeam2(data[MATCH_TEAM2]);
+                    match.setTossWinner(data[MATCH_TOSS_WINNER]);
+                    match.setTossDecision(data[MATCH_TOSS_DECISION]);
+                    match.setResult(data[MATCH_RESULT]);
+                    match.setDlApplied(data[MATCH_DL_APPLIED]);
+                    match.setWinner(data[MATCH_WIN_BY_RUNS]);
+                    match.setWinByWickets(data[MATCH_WIN_BY_WICKETS]);
+                    match.setPlayerOFMatch(data[MATCH_PLAYER_OF_MATCH]);
+                    match.setVenue(data[MATCH_VENUE]);
+                    match.setUmpire1(data[MATCH_UMPIRE_1]);
+                    match.setUmpire2(data[MATCH_UMPIRE_2]);
+                    match.setUmpire3(data[MATCH_UMPIRE_3]);
 
                     matches.add(match);
                 }
