@@ -33,10 +33,10 @@ public class Main {
         try {
             List<Match> matches = getMatchesData();
             System.out.println(findNumberOfMatchesPlayedPerYear(matches));
-            Object map_obj = findNumberOfMatchesWonOfAllTeam(matches);
+            Object mapObj = findNumberOfMatchesWonOfAllTeam(matches);
 
-            //findExtraRunsConcededPerTeam(matches);
-            //findTheMostEconomicalBowlerIn2015(matches, deliveries);
+            ArrayList<String> extraRunsConcededPerTeam = findExtraRunsConcededPerTeam(matches);
+            findTheMostEconomicalBowlerIn2015(matches, deliveries);
 
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
@@ -44,28 +44,37 @@ public class Main {
         List<Delivery> deliveries = getDeliveriesData();
     }
     private static Object findNumberOfMatchesPlayedPerYear(List<Match> matches) {
-        HashMap<String, String> map = new HashMap();
+        HashMap<String, Integer> map = new HashMap<>();
         int count = 0;
         for(int i = 1; i<matches.size(); i++){
             if (map.containsKey(matches.get(i).getSeason())){
-                map.put(matches.get(i).getSeason(), String.valueOf(count++));
+                map.put(matches.get(i).getSeason(), count++);
             }
             else{
                 count = 0;
-                map.put(matches.get(i).getSeason(), String.valueOf(count++));
+                map.put(matches.get(i).getSeason(), count++);
             }
         }
         return map;
     }
     private static Object findNumberOfMatchesWonOfAllTeam(List<Match> matches){
-        HashMap<String, Integer> map = new HashMap();
+        HashMap<String, Integer> map = new HashMap<>();
         for(int i=1; i < matches.size(); i++){
             map.put(matches.get(i).getWinner(), map.containsKey(matches.get(i).getWinner()) ? map.get(matches.get(i).getWinner()) + 1 : 1);
-            System.out.println(map);
         }
         return map;
     }
-    private static void findExtraRunsConcededPerTeam(List<Match> matches){
+    private static ArrayList<String> findExtraRunsConcededPerTeam(List<Match> matches){
+        //HashMap map = new HashMap();
+        ArrayList<String> winByRuns = new ArrayList<>();
+        for (int i=1; i<matches.size(); i++){
+            if (matches.get(i).getSeason().equals("2016")){
+                winByRuns.add(matches.get(i).getWinByRuns());
+            }
+        }
+        System.out.println(winByRuns);
+        //map.put("2016", winByRuns);
+        return winByRuns;
     }
     private static void findTheMostEconomicalBowlerIn2015(List<Match> matches, List<Delivery> deliveries) {
     }
