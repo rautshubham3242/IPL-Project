@@ -69,17 +69,15 @@ public class Main {
 
     private static HashMap<String, Integer> findNumberOfMatchesPlayedPerYear(List<Match> matches) {
         HashMap<String, Integer> matchesPlayedPerYear = new HashMap<>();
-//        for (String )
-
-
-
         int count = 0;
         for (int i = 1; i < matches.size(); i++) {
-            if (matchesPlayedPerYear.containsKey(matches.get(i).getSeason())) {
-                matchesPlayedPerYear.put(matches.get(i).getSeason(), count++);
-            } else {
+            String season = matches.get(i).getSeason();
+            if (!matchesPlayedPerYear.containsKey(season)) {
                 count = 0;
-                matchesPlayedPerYear.put(matches.get(i).getSeason(), count++);
+                matchesPlayedPerYear.put(season, count++);
+            }
+            else {
+                matchesPlayedPerYear.put(season, count++);
             }
         }
         return matchesPlayedPerYear;
@@ -88,7 +86,8 @@ public class Main {
         HashMap<String, Integer> matchesWonOfAllTeam = new HashMap<>();
         for (int i = 1; i < matches.size(); i++) {
             if (!matches.get(i).getResult().equals("no result")){
-                matchesWonOfAllTeam.put(matches.get(i).getWinner(), matchesWonOfAllTeam.containsKey(matches.get(i).getWinner()) ? matchesWonOfAllTeam.get(matches.get(i).getWinner()) + 1 : 1);
+                String winnerTeam = matches.get(i).getWinner();
+                matchesWonOfAllTeam.put(winnerTeam, matchesWonOfAllTeam.containsKey(winnerTeam) ? matchesWonOfAllTeam.get(winnerTeam) + 1 : 1);
             }
         }
         return matchesWonOfAllTeam;
