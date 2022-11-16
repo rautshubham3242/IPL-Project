@@ -1,5 +1,4 @@
 package shubham;
-
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -25,9 +24,9 @@ public class Main {
     public static final int MATCH_WIN_BY_WICKETS = 12;
     public static final int MATCH_PLAYER_OF_MATCH = 13;
     public static final int MATCH_VENUE = 14;
-//    public static final int MATCH_UMPIRE_1 = 15;
-//    public static final int MATCH_UMPIRE_2 = 16;
-//    public static final int MATCH_UMPIRE_3 = 17;
+    public static final int MATCH_UMPIRE_1 = 15;
+    public static final int MATCH_UMPIRE_2 = 16;
+    public static final int MATCH_UMPIRE_3 = 17;
 
     public static final int DELIVERY_MATCH_ID = 0;
     public static final int DELIVERY_INNING = 1;
@@ -65,31 +64,34 @@ public class Main {
 
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
-
         }
     }
 
     private static HashMap<String, Integer> findNumberOfMatchesPlayedPerYear(List<Match> matches) {
-        HashMap<String, Integer> map = new HashMap<>();
+        HashMap<String, Integer> matchesPlayedPerYear = new HashMap<>();
+//        for (String )
+
+
+
         int count = 0;
         for (int i = 1; i < matches.size(); i++) {
-            if (map.containsKey(matches.get(i).getSeason())) {
-                map.put(matches.get(i).getSeason(), count++);
+            if (matchesPlayedPerYear.containsKey(matches.get(i).getSeason())) {
+                matchesPlayedPerYear.put(matches.get(i).getSeason(), count++);
             } else {
                 count = 0;
-                map.put(matches.get(i).getSeason(), count++);
+                matchesPlayedPerYear.put(matches.get(i).getSeason(), count++);
             }
         }
-        return map;
+        return matchesPlayedPerYear;
     }
-
     private static HashMap<String, Integer> findNumberOfMatchesWonOfAllTeam(List<Match> matches) {
-        HashMap<String, Integer> map = new HashMap<>();
+        HashMap<String, Integer> matchesWonOfAllTeam = new HashMap<>();
         for (int i = 1; i < matches.size(); i++) {
-            if (!matches.get(i).getResult().equals("no result"))
-            map.put(matches.get(i).getWinner(), map.containsKey(matches.get(i).getWinner()) ? map.get(matches.get(i).getWinner()) + 1 : 1);
+            if (!matches.get(i).getResult().equals("no result")){
+                matchesWonOfAllTeam.put(matches.get(i).getWinner(), matchesWonOfAllTeam.containsKey(matches.get(i).getWinner()) ? matchesWonOfAllTeam.get(matches.get(i).getWinner()) + 1 : 1);
+            }
         }
-        return map;
+        return matchesWonOfAllTeam;
     }
 
     private static HashMap<String, Integer> findExtraRunsConcededPerTeam(List<Match> matches, List<Delivery> deliveries) {
@@ -199,9 +201,6 @@ public class Main {
         BufferedReader reader = new BufferedReader(new FileReader("/home/oem/Desktop/IPL-Project/ipl-project/src/shubham/deliveries.csv"));
         String line = null;
         List<Delivery> deliveries = new ArrayList<>();
-        //match_id	inning	batting_team	bowling_team	over	ball	batsman	non_striker	bowler	is_super_over	wide_runs	bye_runs
-//    legbye_runs	noball_runs	penalty_runs	batsman_runs	extra_runs	total_runs	player_dismissed	dismissal_kind	fielder
-
         while (true) {
             try {
                 if ((line = reader.readLine()) != null) {
