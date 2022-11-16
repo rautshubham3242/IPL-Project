@@ -33,7 +33,8 @@ public class Main {
         try {
             List<Match> matches = getMatchesData();
             System.out.println(findNumberOfMatchesPlayedPerYear(matches));
-            //findNumberOfMatchesWonOfAllTeam(matches);
+            Object map_obj = findNumberOfMatchesWonOfAllTeam(matches);
+
             //findExtraRunsConcededPerTeam(matches);
             //findTheMostEconomicalBowlerIn2015(matches, deliveries);
 
@@ -55,24 +56,14 @@ public class Main {
             }
         }
         return map;
-
-//        int numberOfMatchesPlay = 1;
-//        String season = matches.get(1).getSeason();
-//
-//        for(int i = 2; i < matches.size(); i++){
-//            if (season.equals(matches.get(i).getSeason())){
-//                numberOfMatchesPlay++;
-//            }
-//            else {
-//                System.out.println("Number of Matches played in "+season+" is "+ numberOfMatchesPlay);
-//                season = matches.get(i).getSeason();
-//                numberOfMatchesPlay = 1;
-//            }
-//        }
     }
-
-    private static void findNumberOfMatchesWonOfAllTeam(List<Match> matches){
-
+    private static Object findNumberOfMatchesWonOfAllTeam(List<Match> matches){
+        HashMap<String, Integer> map = new HashMap();
+        for(int i=1; i < matches.size(); i++){
+            map.put(matches.get(i).getWinner(), map.containsKey(matches.get(i).getWinner()) ? map.get(matches.get(i).getWinner()) + 1 : 1);
+            System.out.println(map);
+        }
+        return map;
     }
     private static void findExtraRunsConcededPerTeam(List<Match> matches){
     }
@@ -105,7 +96,8 @@ public class Main {
                     match.setTossDecision(data[MATCH_TOSS_DECISION]);
                     match.setResult(data[MATCH_RESULT]);
                     match.setDlApplied(data[MATCH_DL_APPLIED]);
-                    match.setWinner(data[MATCH_WIN_BY_RUNS]);
+                    match.setWinner(data[MATCH_WINNER]);
+                    match.setWinByRuns(data[MATCH_WIN_BY_RUNS]);
                     match.setWinByWickets(data[MATCH_WIN_BY_WICKETS]);
                     match.setPlayerOFMatch(data[MATCH_PLAYER_OF_MATCH]);
                     match.setVenue(data[MATCH_VENUE]);

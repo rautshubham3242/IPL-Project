@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="8e8f7148-1d81-4d8b-a681-a3917cfc9a6d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/shubham/.~lock.matches.csv#" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/shubham/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/shubham/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -57,5 +56,16 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/shubham/Main.java</url>
+          <line>35</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
