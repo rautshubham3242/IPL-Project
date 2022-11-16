@@ -24,74 +24,135 @@ public class Main {
     public static final int MATCH_WIN_BY_WICKETS = 12;
     public static final int MATCH_PLAYER_OF_MATCH = 13;
     public static final int MATCH_VENUE = 14;
-    public static final int MATCH_UMPIRE_1 = 15;
-    public static final int MATCH_UMPIRE_2 = 16;
-    public static final int MATCH_UMPIRE_3 = 17;
+//    public static final int MATCH_UMPIRE_1 = 15;
+//    public static final int MATCH_UMPIRE_2 = 16;
+//    public static final int MATCH_UMPIRE_3 = 17;
+
+    public static final int DELIVERY_MATCH_ID = 0;
+    public static final int DELIVERY_INNING = 1;
+    public static final int DELIVERY_BATTING_TEAM = 2;
+    public static final int DELIVERY_BOWLING_TEAM = 3;
+    public static final int DELIVERY_OVER = 4;
+    public static final int DELIVERY_BALL = 5;
+    public static final int DELIVERY_BATSMAN = 6;
+    public static final int DELIVERY_NON_STRIKER = 7;
+    public static final int DELIVERY_BOWLER = 8;
+    public static final int DELIVERY_IS_SUPER_OVER = 9;
+    public static final int DELIVERY_WIDE_RUNS = 10;
+    public static final int DELIVERY_BYE_RUNS = 11;
+    public static final int DELIVERY_LEG_BYE_RUNS = 12;
+    public static final int DELIVERY_NO_BALL_RUNS = 13;
+    public static final int DELIVERY_PENALTY_RUNS = 14;
+    public static final int DELIVERY_BATSMAN_RUNS = 15;
+    public static final int DELIVERY_EXTRA_RUNS = 16;
+    public static final int DELIVERY_TOTAL_RUNS = 17;
+    public static final int DELIVERY_PLAYER_DISMISSED = 18;
+    public static final int DELIVERY_DISMISSED_KIND = 19;
+    public static final int DELIVERY_FIELDER = 20;
 
 
     public static void main(String[] args) {
         try {
             List<Match> matches = getMatchesData();
-            System.out.println(findNumberOfMatchesPlayedPerYear(matches));
-            Object mapObj = findNumberOfMatchesWonOfAllTeam(matches);
+            List<Delivery> deliveries = getDeliveriesData();
 
-            ArrayList<String> extraRunsConcededPerTeam = findExtraRunsConcededPerTeam(matches);
+//            System.out.println(findNumberOfMatchesPlayedPerYear(matches));
+//            System.out.println(findNumberOfMatchesWonOfAllTeam(matches));
+//            System.out.println(findExtraRunsConcededPerTeam(matches, deliveries));
             findTheMostEconomicalBowlerIn2015(matches, deliveries);
 
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
+
         }
-        List<Delivery> deliveries = getDeliveriesData();
     }
-    private static Object findNumberOfMatchesPlayedPerYear(List<Match> matches) {
+
+    private static HashMap<String, Integer> findNumberOfMatchesPlayedPerYear(List<Match> matches) {
         HashMap<String, Integer> map = new HashMap<>();
         int count = 0;
-        for(int i = 1; i<matches.size(); i++){
-            if (map.containsKey(matches.get(i).getSeason())){
+        for (int i = 1; i < matches.size(); i++) {
+            if (map.containsKey(matches.get(i).getSeason())) {
                 map.put(matches.get(i).getSeason(), count++);
-            }
-            else{
+            } else {
                 count = 0;
                 map.put(matches.get(i).getSeason(), count++);
             }
         }
         return map;
     }
-    private static Object findNumberOfMatchesWonOfAllTeam(List<Match> matches){
+
+    private static HashMap<String, Integer> findNumberOfMatchesWonOfAllTeam(List<Match> matches) {
         HashMap<String, Integer> map = new HashMap<>();
-        for(int i=1; i < matches.size(); i++){
+        for (int i = 1; i < matches.size(); i++) {
+            if (!matches.get(i).getResult().equals("no result"))
             map.put(matches.get(i).getWinner(), map.containsKey(matches.get(i).getWinner()) ? map.get(matches.get(i).getWinner()) + 1 : 1);
         }
         return map;
     }
-    private static ArrayList<String> findExtraRunsConcededPerTeam(List<Match> matches){
-        //HashMap map = new HashMap();
-        ArrayList<String> winByRuns = new ArrayList<>();
-        for (int i=1; i<matches.size(); i++){
+
+    private static HashMap<String, Integer> findExtraRunsConcededPerTeam(List<Match> matches, List<Delivery> deliveries) {
+        ArrayList<String> matchId2016 = new ArrayList<>();
+        for (int i = 1; i < matches.size(); i++) {
             if (matches.get(i).getSeason().equals("2016")){
-                winByRuns.add(matches.get(i).getWinByRuns());
+                matchId2016.add(matches.get(i).getId());
             }
         }
-        System.out.println(winByRuns);
-        //map.put("2016", winByRuns);
-        return winByRuns;
-    }
-    private static void findTheMostEconomicalBowlerIn2015(List<Match> matches, List<Delivery> deliveries) {
+
+        HashMap<String, Integer> map = new HashMap<>();
+        for(int j=1; j < deliveries.size(); j++){
+            if (matchId2016.contains(deliveries.get(j).getMatchId())){
+                int extraRun = Integer.parseInt(deliveries.get(j).getExtraRuns());
+                map.put(deliveries.get(j).getBowlingTeam(), map.containsKey(deliveries.get(j).getBowlingTeam()) ? map.get(deliveries.get(j).getBowlingTeam()) + extraRun : extraRun);
+            }
+        }
+        return map;
     }
 
-    private static List<Delivery> getDeliveriesData() {
-        return null;
+    private static HashMap<String, Integer> findTheMostEconomicalBowlerIn2015(List<Match> matches, List<Delivery> deliveries) {
+        ArrayList<String> matchID2015 = new ArrayList<>();
+        for(int i=1; i<matches.size(); i++){
+            if (matches.get(i).getSeason().equals("2015")){
+                matchID2015.add(matches.get(i).getId());
+            }
+        }
+
+        HashMap<String, Integer> runs = new HashMap<>();
+        HashMap<String, Integer> balls = new HashMap<>();
+
+        for(int j=1; j < deliveries.size(); j++){
+            if (matchID2015.contains(deliveries.get(j).getMatchId())){
+                int wideRun = Integer.parseInt(deliveries.get(j).getWideRuns());
+                int noBallRun = Integer.parseInt(deliveries.get(j).getNoBallRuns());
+                int totalRun = Integer.parseInt(deliveries.get(j).getBatsmanRuns());
+                int totalRunForBolls = wideRun + noBallRun + totalRun;
+
+                runs.put(deliveries.get(j).getBowler(), runs.containsKey(deliveries.get(j).getBowler()) ? runs.get(deliveries.get(j).getBowler()) + totalRunForBolls : totalRunForBolls);
+                if (wideRun + noBallRun == 0){
+                    balls.put(deliveries.get(j).getBowler(), balls.containsKey(deliveries.get(j).getBowler()) ? balls.get(deliveries.get(j).getBowler()) + 1 : 1);
+                }
+            }
+        }
+
+        for (String run: runs.keySet()) {
+                System.out.println(run + " "+ (runs.get(run) * 6f/balls.get(run)));
+        }
+//        System.out.println(runs);
+//        System.out.println(balls);
+
+
+        return runs;
     }
+
+
 
     private static List<Match> getMatchesData() throws FileNotFoundException {
-        // use bufferedReader and some file reader
         BufferedReader reader = new BufferedReader(new FileReader("/home/oem/Desktop/IPL-Project/ipl-project/src/shubham/matches.csv"));
         String line = null;
         List<Match> matches = new ArrayList<>();
 
         while (true) {
             try {
-                if ((line=reader.readLine()) != null) {
+                if ((line = reader.readLine()) != null) {
                     String[] data = line.split(",");
 
                     Match match = new Match();
@@ -115,8 +176,7 @@ public class Main {
                     //match.setUmpire3(data[MATCH_UMPIRE_3]);
 
                     matches.add(match);
-                }
-                else{
+                } else {
                     break;
                 }
             } catch (IOException e) {
@@ -126,5 +186,49 @@ public class Main {
         return matches;
     }
 
+    private static List<Delivery> getDeliveriesData() throws FileNotFoundException {
+        BufferedReader reader = new BufferedReader(new FileReader("/home/oem/Desktop/IPL-Project/ipl-project/src/shubham/deliveries.csv"));
+        String line = null;
+        List<Delivery> deliveries = new ArrayList<>();
+        //match_id	inning	batting_team	bowling_team	over	ball	batsman	non_striker	bowler	is_super_over	wide_runs	bye_runs
+//    legbye_runs	noball_runs	penalty_runs	batsman_runs	extra_runs	total_runs	player_dismissed	dismissal_kind	fielder
+
+        while (true) {
+            try {
+                if ((line = reader.readLine()) != null) {
+                    String[] data = line.split(",");
+                    Delivery delivery = new Delivery();
+                    delivery.setMatchId(data[DELIVERY_MATCH_ID]);
+                    delivery.setInning(data[DELIVERY_INNING]);
+                    delivery.setBattingTeam(data[DELIVERY_BATTING_TEAM]);
+                    delivery.setBowlingTeam(data[DELIVERY_BOWLING_TEAM]);
+                    delivery.setOver(data[DELIVERY_OVER]);
+                    delivery.setBall(data[DELIVERY_BALL]);
+                    delivery.setBatsman(data[DELIVERY_BATSMAN]);
+                    delivery.setNonStriker(data[DELIVERY_NON_STRIKER]);
+                    delivery.setBowler(data[DELIVERY_BOWLER]);
+                    delivery.setIsSuperOver(data[DELIVERY_IS_SUPER_OVER]);
+                    delivery.setWideRuns(data[DELIVERY_WIDE_RUNS]);
+                    delivery.setByeRuns(data[DELIVERY_BYE_RUNS]);
+                    delivery.setLegByeRuns(data[DELIVERY_LEG_BYE_RUNS]);
+                    delivery.setNoBallRuns(data[DELIVERY_NO_BALL_RUNS]);
+                    delivery.setPenaltyRuns(data[DELIVERY_PENALTY_RUNS]);
+                    delivery.setBatsmanRuns(data[DELIVERY_BATSMAN_RUNS]);
+                    delivery.setExtraRuns(data[DELIVERY_EXTRA_RUNS]);
+                    delivery.setTotalRuns(data[DELIVERY_TOTAL_RUNS]);
+//                    delivery.setPlayerDismissed(data[DELIVERY_PLAYER_DISMISSED]);
+//                    delivery.setDismissalKind(data[DELIVERY_DISMISSED_KIND]);
+//                    delivery.setFielder(data[DELIVERY_FIELDER]);
+                    deliveries.add(delivery);
+//                    matches.add(match);
+                } else {
+                    break;
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return deliveries;
+    }
 }
 
