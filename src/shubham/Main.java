@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Main {
     public static final int MATCH_ID = 0;
@@ -56,10 +57,11 @@ public class Main {
             List<Match> matches = getMatchesData();
             List<Delivery> deliveries = getDeliveriesData();
 
-//            System.out.println(findNumberOfMatchesPlayedPerYear(matches));
-//            System.out.println(findNumberOfMatchesWonOfAllTeam(matches));
-//            System.out.println(findExtraRunsConcededPerTeam(matches, deliveries));
-            findTheMostEconomicalBowlerIn2015(matches, deliveries);
+            System.out.println(findNumberOfMatchesPlayedPerYear(matches));
+            System.out.println(findNumberOfMatchesWonOfAllTeam(matches));
+            System.out.println(findExtraRunsConcededPerTeam(matches, deliveries));
+            System.out.println(findTheMostEconomicalBowlerIn2015(matches, deliveries));
+            System.out.println(findTheTeamWhoWonTheTossAndWonTheMatch(matches));
 
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
@@ -132,15 +134,22 @@ public class Main {
                 }
             }
         }
-
-        for (String run: runs.keySet()) {
-                System.out.println(run + " "+ (runs.get(run) * 6f/balls.get(run)));
+        HashMap<String, Integer> economicalPlayer = new HashMap<>();
+        for (String playerName: runs.keySet()) {
+                economicalPlayer.put(playerName, (int)(runs.get(playerName) * 6f/balls.get(playerName)));
         }
-//        System.out.println(runs);
-//        System.out.println(balls);
+        return economicalPlayer;
+    }
 
 
-        return runs;
+    private static Map<String, Integer> findTheTeamWhoWonTheTossAndWonTheMatch(List<Match> matches){
+        HashMap<String, Integer> map = new HashMap<>();
+        for(int i = 1; i<matches.size(); i++){
+            if (matches.get(i).getTossWinner().equals(matches.get(i).getWinner())){
+                map.put(matches.get(i).getTossWinner(), map.containsKey(matches.get(i).getTossWinner())? Integer.parseInt(String.valueOf(map.get(matches.get(i).getTossWinner()))) +1 : 1);
+            }
+        }
+        return map;
     }
 
 
