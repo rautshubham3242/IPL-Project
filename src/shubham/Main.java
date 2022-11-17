@@ -3,10 +3,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Main {
     public static final int MATCH_ID = 0;
@@ -84,35 +81,50 @@ public class Main {
     }
     private static HashMap<String, Integer> findNumberOfMatchesWonOfAllTeam(List<Match> matches) {
         HashMap<String, Integer> matchesWonOfAllTeam = new HashMap<>();
+        int count = 0;
         for (int i = 1; i < matches.size(); i++) {
             if (!matches.get(i).getResult().equals("no result")){
                 String winnerTeam = matches.get(i).getWinner();
-                matchesWonOfAllTeam.put(winnerTeam, matchesWonOfAllTeam.containsKey(winnerTeam) ? matchesWonOfAllTeam.get(winnerTeam) + 1 : 1);
+                if (!matchesWonOfAllTeam.containsKey(winnerTeam)){
+                    count = 0;
+                    matchesWonOfAllTeam.put(winnerTeam, count);
+                }
+                else{
+                    matchesWonOfAllTeam.put(winnerTeam, count++);
+                }
             }
         }
         return matchesWonOfAllTeam;
     }
 
     private static HashMap<String, Integer> findExtraRunsConcededPerTeam(List<Match> matches, List<Delivery> deliveries) {
-        ArrayList<String> matchId2016 = new ArrayList<>();
+        HashSet<String> matchId2016 = new HashSet<>();
         for (int i = 1; i < matches.size(); i++) {
-            if (matches.get(i).getSeason().equals("2016")){
+            String season = matches.get(i).getSeason();
+            if (season.equals("2016")){
                 matchId2016.add(matches.get(i).getId());
             }
         }
 
-        HashMap<String, Integer> map = new HashMap<>();
+        HashMap<String, Integer> extraRunsConcededPerTeam = new HashMap<>();
         for(int j=1; j < deliveries.size(); j++){
             if (matchId2016.contains(deliveries.get(j).getMatchId())){
                 int extraRun = Integer.parseInt(deliveries.get(j).getExtraRuns());
-                map.put(deliveries.get(j).getBowlingTeam(), map.containsKey(deliveries.get(j).getBowlingTeam()) ? map.get(deliveries.get(j).getBowlingTeam()) + extraRun : extraRun);
+                String bowlingTeam = deliveries.get(j).getBowlingTeam();
+                if (!extraRunsConcededPerTeam.containsKey(bowlingTeam)){
+                    extraRunsConcededPerTeam.put(bowlingTeam, extraRun);
+                }
+                else{
+                    extraRunsConcededPerTeam.put(bowlingTeam, extraRunsConcededPerTeam.get(bowlingTeam) + extraRun);
+                }
+//                map.put(bowlingTeam, map.containsKey(bowlingTeam) ? map.get(bowlingTeam) + extraRun : extraRun);
             }
         }
-        return map;
+        return extraRunsConcededPerTeam;
     }
 
     private static HashMap<String, Integer> findTheMostEconomicalBowlerIn2015(List<Match> matches, List<Delivery> deliveries) {
-        ArrayList<String> matchID2015 = new ArrayList<>();
+        HashSet<String> matchID2015 = new HashSet<>();
         for(int i=1; i<matches.size(); i++){
             if (matches.get(i).getSeason().equals("2015")){
                 matchID2015.add(matches.get(i).getId());
@@ -128,29 +140,47 @@ public class Main {
                 int noBallRun = Integer.parseInt(deliveries.get(j).getNoBallRuns());
                 int totalRun = Integer.parseInt(deliveries.get(j).getBatsmanRuns());
                 int totalRunForBolls = wideRun + noBallRun + totalRun;
+                String bowlerName = deliveries.get(j).getBowler();
+                if (!runs.containsKey(deliveries.get(j).getBowler())){
+                    runs.put(bowlerName, totalRunForBolls);
+                }
+                else{
+                    int previousRun = runs.get(bowlerName);
+                    runs.put(bowlerName, previousRun + totalRunForBolls);
+                }
 
-                runs.put(deliveries.get(j).getBowler(), runs.containsKey(deliveries.get(j).getBowler()) ? runs.get(deliveries.get(j).getBowler()) + totalRunForBolls : totalRunForBolls);
                 if (wideRun + noBallRun == 0){
-                    balls.put(deliveries.get(j).getBowler(), balls.containsKey(deliveries.get(j).getBowler()) ? balls.get(deliveries.get(j).getBowler()) + 1 : 1);
+                    if (balls.containsKey(bowlerName)){
+                        int previousRun = balls.get(bowlerName);
+                        balls.put(bowlerName, previousRun + 1);
+                    }
+                    else{
+                        balls.put(bowlerName, 1);
+                    }
                 }
             }
         }
         HashMap<String, Integer> economicalPlayer = new HashMap<>();
         for (String playerName: runs.keySet()) {
-                economicalPlayer.put(playerName, (int)(runs.get(playerName) * 6f/balls.get(playerName)));
+            int playerRun = (int)(runs.get(playerName));
+            int playerBalls = (int)(balls.get(playerName));
+            economicalPlayer.put(playerName, playerRun * 6/playerBalls);
         }
         return economicalPlayer;
     }
 
 
     private static Map<String, Integer> findTheTeamWhoWonTheTossAndWonTheMatch(List<Match> matches){
-        HashMap<String, Integer> map = new HashMap<>();
+        HashMap<String, Integer> teamWonTheTossAndWonTheMatch = new HashMap<>();
         for(int i = 1; i<matches.size(); i++){
-            if (matches.get(i).getTossWinner().equals(matches.get(i).getWinner())){
-                map.put(matches.get(i).getTossWinner(), map.containsKey(matches.get(i).getTossWinner())? Integer.parseInt(String.valueOf(map.get(matches.get(i).getTossWinner()))) +1 : 1);
+            String tossWinnerTeam = matches.get(i).getTossWinner();
+            String matchWinnerTeam = matches.get(i).getWinner();
+            if (tossWinnerTeam.equals(matchWinnerTeam)){
+//                if ()
+                teamWonTheTossAndWonTheMatch.put(tossWinnerTeam, teamWonTheTossAndWonTheMatch.containsKey(tossWinnerTeam)? Integer.parseInt(String.valueOf(teamWonTheTossAndWonTheMatch.get(matches.get(i).getTossWinner()))) +1 : 1);
             }
         }
-        return map;
+        return teamWonTheTossAndWonTheMatch;
     }
 
 

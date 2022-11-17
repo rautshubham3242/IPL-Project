@@ -65,12 +65,12 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/shubham/Main.java</url>
-          <line>59</line>
+          <line>56</line>
           <option name="timeStamp" value="2" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/shubham/Main.java</url>
-          <line>138</line>
+          <line>163</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>
