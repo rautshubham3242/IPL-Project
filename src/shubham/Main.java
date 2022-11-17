@@ -21,9 +21,6 @@ public class Main {
     public static final int MATCH_WIN_BY_WICKETS = 12;
     public static final int MATCH_PLAYER_OF_MATCH = 13;
     public static final int MATCH_VENUE = 14;
-    public static final int MATCH_UMPIRE_1 = 15;
-    public static final int MATCH_UMPIRE_2 = 16;
-    public static final int MATCH_UMPIRE_3 = 17;
 
     public static final int DELIVERY_MATCH_ID = 0;
     public static final int DELIVERY_INNING = 1;
@@ -43,9 +40,6 @@ public class Main {
     public static final int DELIVERY_BATSMAN_RUNS = 15;
     public static final int DELIVERY_EXTRA_RUNS = 16;
     public static final int DELIVERY_TOTAL_RUNS = 17;
-    public static final int DELIVERY_PLAYER_DISMISSED = 18;
-    public static final int DELIVERY_DISMISSED_KIND = 19;
-    public static final int DELIVERY_FIELDER = 20;
 
 
     public static void main(String[] args) {
@@ -53,11 +47,11 @@ public class Main {
             List<Match> matches = getMatchesData();
             List<Delivery> deliveries = getDeliveriesData();
 
-            System.out.println(findNumberOfMatchesPlayedPerYear(matches));
-            System.out.println(findNumberOfMatchesWonOfAllTeam(matches));
-            System.out.println(findExtraRunsConcededPerTeam(matches, deliveries));
-            System.out.println(findTheMostEconomicalBowlerIn2015(matches, deliveries));
-            System.out.println(findTheTeamWhoWonTheTossAndWonTheMatch(matches));
+            HashMap<String, Integer> matchesPlayedAllYear = findNumberOfMatchesPlayedPerYear(matches);
+            HashMap<String, Integer> matchesWonAllTeam = findNumberOfMatchesWonOfAllTeam(matches);
+            HashMap<String, Integer> extraRunsConcededPerTeamIn2016 = findExtraRunsConcededPerTeam(matches, deliveries);
+            HashMap<String, Integer> mostEconomicalBowlerIn2015 = findTheMostEconomicalBowlerIn2015(matches, deliveries);
+            HashMap<String, Integer> teamWhoWonTheTossAndMatch = findTheTeamWhoWonTheTossAndWonTheMatch(matches);
 
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
@@ -86,7 +80,7 @@ public class Main {
             if (!matches.get(i).getResult().equals("no result")){
                 String winnerTeam = matches.get(i).getWinner();
                 if (!matchesWonOfAllTeam.containsKey(winnerTeam)){
-                    count = 0;
+                    count = 1;
                     matchesWonOfAllTeam.put(winnerTeam, count);
                 }
                 else{
@@ -117,7 +111,6 @@ public class Main {
                 else{
                     extraRunsConcededPerTeam.put(bowlingTeam, extraRunsConcededPerTeam.get(bowlingTeam) + extraRun);
                 }
-//                map.put(bowlingTeam, map.containsKey(bowlingTeam) ? map.get(bowlingTeam) + extraRun : extraRun);
             }
         }
         return extraRunsConcededPerTeam;
@@ -162,21 +155,28 @@ public class Main {
         }
         HashMap<String, Integer> economicalPlayer = new HashMap<>();
         for (String playerName: runs.keySet()) {
-            int playerRun = (int)(runs.get(playerName));
-            int playerBalls = (int)(balls.get(playerName));
+            int playerRun = runs.get(playerName);
+            int playerBalls = balls.get(playerName);
             economicalPlayer.put(playerName, playerRun * 6/playerBalls);
         }
         return economicalPlayer;
     }
 
 
-    private static Map<String, Integer> findTheTeamWhoWonTheTossAndWonTheMatch(List<Match> matches){
+    private static HashMap<String, Integer> findTheTeamWhoWonTheTossAndWonTheMatch(List<Match> matches){
         HashMap<String, Integer> teamWonTheTossAndWonTheMatch = new HashMap<>();
+        int count = 0;
         for(int i = 1; i<matches.size(); i++){
             String tossWinnerTeam = matches.get(i).getTossWinner();
             String matchWinnerTeam = matches.get(i).getWinner();
             if (tossWinnerTeam.equals(matchWinnerTeam)){
-//                if ()
+                if (!teamWonTheTossAndWonTheMatch.containsKey(tossWinnerTeam)){
+                    count = 1;
+                    teamWonTheTossAndWonTheMatch.put(tossWinnerTeam, count);
+                }
+                else{
+                    teamWonTheTossAndWonTheMatch.put(tossWinnerTeam, count++);
+                }
                 teamWonTheTossAndWonTheMatch.put(tossWinnerTeam, teamWonTheTossAndWonTheMatch.containsKey(tossWinnerTeam)? Integer.parseInt(String.valueOf(teamWonTheTossAndWonTheMatch.get(matches.get(i).getTossWinner()))) +1 : 1);
             }
         }
@@ -187,14 +187,13 @@ public class Main {
 
     private static List<Match> getMatchesData() throws FileNotFoundException {
         BufferedReader reader = new BufferedReader(new FileReader("/home/oem/Desktop/IPL-Project/ipl-project/src/shubham/matches.csv"));
-        String line = null;
+        String line;
         List<Match> matches = new ArrayList<>();
 
         while (true) {
             try {
                 if ((line = reader.readLine()) != null) {
                     String[] data = line.split(",");
-
                     Match match = new Match();
                     match.setId(data[MATCH_ID]);
                     match.setSeason(data[MATCH_SEASON]);
@@ -211,10 +210,6 @@ public class Main {
                     match.setWinByWickets(data[MATCH_WIN_BY_WICKETS]);
                     match.setPlayerOFMatch(data[MATCH_PLAYER_OF_MATCH]);
                     match.setVenue(data[MATCH_VENUE]);
-                    //match.setUmpire1(data[MATCH_UMPIRE_1]);
-                    //match.setUmpire2(data[MATCH_UMPIRE_2]);
-                    //match.setUmpire3(data[MATCH_UMPIRE_3]);
-
                     matches.add(match);
                 } else {
                     break;
@@ -228,7 +223,7 @@ public class Main {
 
     private static List<Delivery> getDeliveriesData() throws FileNotFoundException {
         BufferedReader reader = new BufferedReader(new FileReader("/home/oem/Desktop/IPL-Project/ipl-project/src/shubham/deliveries.csv"));
-        String line = null;
+        String line;
         List<Delivery> deliveries = new ArrayList<>();
         while (true) {
             try {
@@ -253,11 +248,7 @@ public class Main {
                     delivery.setBatsmanRuns(data[DELIVERY_BATSMAN_RUNS]);
                     delivery.setExtraRuns(data[DELIVERY_EXTRA_RUNS]);
                     delivery.setTotalRuns(data[DELIVERY_TOTAL_RUNS]);
-//                    delivery.setPlayerDismissed(data[DELIVERY_PLAYER_DISMISSED]);
-//                    delivery.setDismissalKind(data[DELIVERY_DISMISSED_KIND]);
-//                    delivery.setFielder(data[DELIVERY_FIELDER]);
                     deliveries.add(delivery);
-//                    matches.add(match);
                 } else {
                     break;
                 }
